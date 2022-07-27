@@ -1,0 +1,5 @@
+dict(kpts=None,
+     pps='fhi',
+     raw=None,
+     smearing=None,
+     xc='LDA')
