@@ -20,7 +20,7 @@ def calc_gse(structures):
     os.system("rm abinit*")
     for structure in structures:
         ase_structure = AseAtomsAdaptor.get_atoms(structure)
-    calc = Abinit(atoms=ase_structure,label=label)
+    calc = Abinit(atoms=ase_structure,label=label,ecut=60)
     ase_structure.calc = calc
     e = ase_structure.get_potential_energy()
 

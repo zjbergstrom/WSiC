@@ -6,13 +6,14 @@ import os
 import ase
 from pymatgen.core import Lattice, Structure, Molecule, IStructure
 from pymatgen.core.periodic_table import Species, Element, ElementBase
-#from pymatgen.ext.matproj import MPRester
-from mp_api import MPRester
+from pymatgen.ext.matproj import MPRester
+#from mp_api import MPRester
 import pandas as pd
 import os
 import calc_gse as cg
 
-USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
+#USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
+USER_API_KEY = "iItEHUSQ6meb9nks"
 base = {"W":"mp-91","Si":"mp-149","C":"mp-569304"}
 
 
