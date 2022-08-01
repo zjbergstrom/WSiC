@@ -1,7 +1,7 @@
 
 def writeSubmitScript(filename = "saturn.sbatch", name="job name", queue=None, nodes=None, cpus=None, time=None):
     with open("saturn.sbatch","w") as fout:
-        fout.write('/bin/bash \n\n')
+        fout.write('#!/bin/bash \n\n')
         fout.write('#SBATCH -p batch\n')
         fout.write('#SBATCH -n 8\n')
         fout.write('#SBATCH -N 2\n')
@@ -30,9 +30,7 @@ def writeSubmitScript(filename = "saturn.sbatch", name="job name", queue=None, n
         fout.write('#module load netcdf/4.4.1-mpich3.2-gcc4.7.2\n\n')
 
         fout.write('mkdir results\n')
-        fout.write('#EXE=/fusion/projects/codes/abinit/stable-git/build/bin/abinit\n')
-        fout.write('srun --mpi=pmi2 -n 16 abinit < ./input/W_C.files\n')
-        fout.write('#srun -n 16 abinit < ./input/W.files\n\n')
+        fout.write('srun --mpi=pmi2 -n 16 abinit < ./input/{}.files\n\n'.format(name))
 
         fout.write('#cp -a ${RUNDIR}/results ${OUTDIR}/\n')
         fout.write('#rm -rf ${RUNDIR}\n')
