@@ -26,37 +26,28 @@ These are repeating structures
 '''
 # Looping over MAX phase compounts 
 
+def getTernaryStructures():
+    #read the data
+    #os.system("ls ternary_reference_compounds_structures > filenames.txt")
+    instr=open('filenames2.txt','r')
+    POSCARs=instr.readlines()
 
-#read the data
-#os.system("ls ternary_reference_compounds_structures > filenames.txt")
-instr=open('filenames2.txt','r')
-POSCARs=instr.readlines()
+    base = [Element("W"),Element("Si"),Element("C")]
+    structures = []
+    for poscar in POSCARs:
+        print("Loading ",poscar.strip())
+        structure = Structure.from_file("ternary_reference_compounds_structures/" + poscar.strip())
+        print(structure.composition.formula)
+        print(structure.get_space_group_info())
+        #print(structure.lattice)
+        #print(structure.species)
+        #print(structure.sites)
+        #structure.replace(0,Element("H"))
+        #print(type(structure.sites[0]))
+        structures.append(structure)
 
-#dn=[]
-base = [Element("W"),Element("Si"),Element("C")]
-for poscar in POSCARs:
-    print("Loading ",poscar.strip())
-    structure = Structure.from_file("ternary_reference_compounds_structures/" + poscar.strip())
-    print(structure.composition.formula)
-    print(structure.get_space_group_info())
-    #print(structure.lattice)
-    #print(structure.species)
-    #print(structure.sites)
-    #structure.replace(0,Element("H"))
-    #print(type(structure.sites[0]))
-
-
-    #sl=l.split()
-    #fl=[float(i) for i in sl]
-    #if 1:
-    #    dn.append(fl)
-#dna=np.array(dn)
-
-
-
-
+    return structures
 
 
 if __name__ == "__main__":
-    #base_elements()
-    pass
+    structures = getTernaryStructures()

@@ -1,4 +1,5 @@
 dict(kpts=None,
+     param={'ecut': 1632, 'toldfe': 1e-06},
      pps='fhi',
      raw=None,
      smearing=None,

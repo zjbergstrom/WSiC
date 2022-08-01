@@ -5,7 +5,7 @@ in the W-Si-C ternary system
 import os
 import ase
 from pymatgen.core import Lattice, Structure, Molecule, IStructure
-from pymatgen.core.periodic_table import Species, Element, ElementBase
+from pymatgen.core.periodic_table import Element
 from pymatgen.ext.matproj import MPRester
 #from mp_api import MPRester
 import pandas as pd
@@ -16,25 +16,16 @@ import calc_gse as cg
 USER_API_KEY = "iItEHUSQ6meb9nks"
 base = {"W":"mp-91","Si":"mp-149","C":"mp-569304"}
 
-
 def getBaseElements():
     structures = []
     with MPRester(USER_API_KEY) as m:
         for element in base.keys():
-            print(element)
 
             # Structure for material id
             structure = m.get_structure_by_material_id(base[element])
+            
             structures.append(structure)
-
-            #data = m.get_entry_by_material_id(base[element])
-            #print(data)
-
-            # To get a list of data for all entries having formula Fe2O3
-            # data = m.get_data("Fe2O3")
-
-            # To get the energies of all entries having formula Fe2O3
-            # energies = m.get_data("Fe2O3", "energy")
+    
     return structures
 
 def pullGSE():
