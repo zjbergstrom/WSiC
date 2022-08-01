@@ -15,7 +15,7 @@ from pymatgen.io.ase import AseAtomsAdaptor
 
 import base_compounds as bc
 import slurm as sl
-import ternary as tn
+# import ternary as tn
 
 PP_PATH = os.environ["PP"]
 
@@ -49,7 +49,7 @@ def writeFiles(structure):
         print(structure.composition.reduced_formula)
         for element in structure.composition.elements:
             print(element.symbol)
-            fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.symbol,element.Z))
+            fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
 
 
 def makeRunDirs(structure):
@@ -72,7 +72,6 @@ def generateInputs(structures):
 
         # Change structure to ase type
         ase_structure = AseAtomsAdaptor.get_atoms(structure)
-        print(type(ase_structure))
 
         # Write abinit.in
         with open(structure.composition.reduced_formula + ".in","w") as fd:
