@@ -1,9 +1,9 @@
 import ase
 from pymatgen.core import Lattice, Structure, Molecule, IStructure, composition
-from pymatgen.core.periodic_table import Species, Element, ElementBase
+from pymatgen.core.periodic_table import Element
 #from pymatgen.core.composition import Composition
 #from pymatgen.ext.matproj import MPRester
-from mp_api import MPRester
+#from mp_api import MPRester
 import pandas as pd
 import os
 
@@ -26,7 +26,7 @@ These are repeating structures
 '''
 # Looping over MAX phase compounts 
 
-def getTernaryStructures(filename):
+def getTernaryStructures(filename,dir):
     #read the data
     #os.system("ls ternary_reference_compounds_structures > filenames.txt")
     instr=open(filename,'r')
@@ -36,7 +36,7 @@ def getTernaryStructures(filename):
     structures = []
     for poscar in POSCARs:
         print("Loading ",poscar.strip())
-        structure = Structure.from_file("ternary_reference_compounds_structures/" + poscar.strip())
+        structure = Structure.from_file(dir + poscar.strip())
         print(structure.composition.formula)
         print(structure.get_space_group_info())
         #print(structure.lattice)
@@ -50,4 +50,4 @@ def getTernaryStructures(filename):
 
 
 if __name__ == "__main__":
-    structures = getTernaryStructures(filename="filenames1.txt")
+    structures = getTernaryStructures(filename="filenames1.txt",dir="structurefiles/")

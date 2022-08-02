@@ -30,11 +30,13 @@ params = {"ecut" : int(60*Ha2eV),
             "toldfe" : 1e-6,
             "nstep" : 40,
             "kpts" : 1,
-            "optcell" : 1,
-            "ionmov" : 2,
-            "ntime" : 10,
-            "dilatmx" : 1.05,
-            "ecutsm" : 0.5}
+            "chksymbreak" : 0,
+#            "optcell" : 1,
+#            "ionmov" : 2,
+#            "ntime" : 10,
+#            "dilatmx" : 1.05,
+#            "ecutsm" : 0.5
+}
 
 
 def writeFiles(structure):
@@ -48,13 +50,14 @@ def writeFiles(structure):
         fout.write('./results/{}-x\n'.format(name))
         print(structure.composition.reduced_formula)
         for element in structure.composition.elements:
-            print(element.symbol)
-            fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+            if element.symbol == "C":
+                fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+            else:
+                fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
 
 
 def makeRunDirs(structure):
     name = structure.composition.reduced_formula
-    os.system("mkdir simulations")
     os.system("mkdir simulations/{}".format(name))
     os.system("mkdir simulations/{}/input".format(name))
     os.system("mkdir simulations/{}/results".format(name))
@@ -70,6 +73,7 @@ data = {"structure" : [],
 
 
 def generateInputs(structures):
+    os.system("mkdir simulations")
     for structure in structures:
 
         # Information on structure
@@ -96,6 +100,6 @@ def generateInputs(structures):
 
 if __name__ == "__main__":
     generateInputs(bc.getBaseElements())
-    generateInputs(tn.getTernaryStructures(filename="filenames1.txt"))
+    generateInputs(tn.getTernaryStructures(filename="filenames1.txt",dir="structurefiles/"))
     df = pd.DataFrame(data)
     print(df)
