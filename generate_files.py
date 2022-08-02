@@ -41,14 +41,13 @@ params = {"ecut" : int(60*Ha2eV),
 
 def writeFiles(structure):
     # Write *.files
-    with open(structure.composition.reduced_formula + ".files","w") as fout:
-        name = structure.composition.reduced_formula
+    name = structure.composition.formula.replace(" ","")
+    with open(name + ".files","w") as fout:
         fout.write('./input/{}.in\n'.format(name))
         fout.write('./results/{}.out\n'.format(name))
         fout.write('./results/{}-i\n'.format(name))
         fout.write('./results/{}-o\n'.format(name))
         fout.write('./results/{}-x\n'.format(name))
-        print(structure.composition.reduced_formula)
         for element in structure.composition.elements:
             if element.symbol == "C":
                 fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
@@ -57,7 +56,7 @@ def writeFiles(structure):
 
 
 def makeRunDirs(structure):
-    name = structure.composition.reduced_formula
+    name = structure.composition.formula.replace(" ","")
     os.system("mkdir simulations/{}".format(name))
     os.system("mkdir simulations/{}/input".format(name))
     os.system("mkdir simulations/{}/results".format(name))
@@ -69,7 +68,9 @@ def makeRunDirs(structure):
 # pandas df data structures
 # W Si C
 data = {"structure" : [],
-        "atom quantities" : []}
+        "space group" : [],
+        "atom quantities" : [],
+        }
 
 
 def generateInputs(structures):
@@ -77,22 +78,24 @@ def generateInputs(structures):
     for structure in structures:
 
         # Information on structure
-        print(structure.composition.formula)
+        name = structure.composition.formula.replace(" ","")
+        print(name)
         print(structure.get_space_group_info())
 
         # Change structure to ase type
         ase_structure = AseAtomsAdaptor.get_atoms(structure)
 
         # Write abinit.in
-        with open(structure.composition.reduced_formula + ".in","w") as fd:
+        with open(name + ".in","w") as fd:
             write_abinit_in(fd, ase_structure, param=params)
 
-        sl.writeSubmitScript(name=structure.composition.reduced_formula)
+        sl.writeSubmitScript(name=name)
         writeFiles(structure)
         makeRunDirs(structure)
 
         # make dataframe as structure files are being populated
-        data["structure"].append(structure.composition.reduced_formula)
+        data["structure"].append(name)
+        data["space group"].append(structure.get_space_group_info())
         comp = structure.composition.get_el_amt_dict()
         data["atom quantities"].append([comp["W"],comp["Si"],comp["C"]])
 
