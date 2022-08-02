@@ -46,24 +46,23 @@ def _energy_to_enthalpy(energy):
     enthalpy : list of lists containing the enthalpies.
     """
     
-    pureA = [energy[0][0], energy[0][1]]
-    pureB = [energy[1][0], energy[1][1]]
-    pureC = [energy[2][0], energy[2][1]]
+    pureA = energy[0][0]
+    pureB = energy[1][0]
+    pureC = energy[2][0]
 
     enthalpy = []
     for en in energy:
-        c = en[2]
+        c = en[1]
         conc = [float(i) / sum(c) for i in c]
 
-        CE = _en_to_enth(en[0], conc, pureA[0], pureB[0], pureC[0])
-        VASP = _en_to_enth(en[1], conc, pureA[1], pureB[1], pureC[1])
+        VASP = _en_to_enth(en[0], conc, pureA, pureB, pureC)
 
-        enthalpy.append([CE, VASP, c])
+        enthalpy.append([VASP, c])
 
     return enthalpy
 
 
-def _find_error(vals):
+def _find_concs(vals):
     """Find the errors in the energy values.
     This function finds the errors in the enthalpys.
     Parameters
@@ -74,22 +73,20 @@ def _find_error(vals):
     err_vals : list of lists containing the errors.
     """
 
-    err_vals = []
+    e_vals = []
     for en in vals:
-        c = en[2]
+        c = en[1]
         conc = [float(i) / sum(c) for i in c]
 
-        err = abs(en[0] - en[1])
+        e_vals.append([conc, en[0]])
 
-        err_vals.append([conc, err])
-
-    return err_vals
+    return e_vals
 
 
 def _read_data(fname):
     """Reads data from file.
     Reads the data in 'fname' into a list where each list entry contains 
-    [energy predicted, energy calculated, list of concentrations].
+    [energy calculated, list of concentrations].
     Parameters
     ----------
     fname : str
@@ -104,9 +101,8 @@ def _read_data(fname):
     energy = []
     with open(fname,'r') as f:
         for line in f:
-            CE = abs(float(line.strip().split()[0]))
-            VASP = abs(float(line.strip().split()[1]))
-            conc = [i for i in line.strip().split()[2:]]
+            VASP = abs(float(line.strip().split()[0]))
+            conc = [i for i in line.strip().split()[1:]]
 
             conc_f = []
             for c in conc:
@@ -118,11 +114,11 @@ def _read_data(fname):
                     conc_f.append(int(c[:-1]))
                 else:
                     conc_f.append(int(c))
-            energy.append([CE, VASP, conc_f])
+            energy.append([VASP, conc_f])
     return energy
 
 
-def conc_err_plot(fname):
+def conc_plot(fname):
     """Plots the error in the CE data.
     
     This plots the error in the CE predictions within a ternary concentration diagram.
@@ -133,25 +129,25 @@ def conc_err_plot(fname):
 
     energies = _read_data(fname)
     enthalpy = _energy_to_enthalpy(energies)
-    this_errors = _find_error(enthalpy)
+    this_conc = _find_concs(enthalpy)
 
     points = []
     colors = []
-    for er in this_errors:
-        concs = er[0]
+    for en in this_conc:
+        concs = en[0]
         points.append((concs[0] * 100, concs[1] * 100, concs[2] * 100))
-        colors.append(er[1])
+        colors.append(en[1])
     
     scale = 100
     figure, tax = ternary.figure(scale=scale)
     tax.boundary(linewidth=1.0)
-    tax.set_title("Errors in Convex Hull Predictions.", fontsize=20)
+    tax.set_title("Enthalpies", fontsize=20)
     tax.gridlines(multiple=10, color="blue")
-    tax.scatter(points, vmax=max(colors), colormap=plt.cm.viridis, colorbar=True, c=colors, cmap=plt.cm.viridis)
+    tax.scatter(points, vmax=max(colors), colormap=plt.cm.magma, colorbar=True, c=colors, cmap=plt.cm.magma)
 
     tax.show()
 
 
 if __name__ == "__main__":
-    conc_err_plot('sample_data/scatter_colorbar.txt')
+    conc_plot('scatter_colorbar.txt')
 

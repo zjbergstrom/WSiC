@@ -5,8 +5,8 @@ import os
 import ase
 from pymatgen.core import Lattice, Structure, Molecule, IStructure
 from pymatgen.core.periodic_table import Element
-#from pymatgen.ext.matproj import MPRester
-from mp_api import MPRester
+from pymatgen.ext.matproj import MPRester
+#from mp_api import MPRester
 import pandas as pd
 
 from ase.io.abinit import * #write_abinit_in, read_abinit_out, read_results
@@ -15,15 +15,15 @@ from pymatgen.io.ase import AseAtomsAdaptor
 
 import base_compounds as bc
 import slurm as sl
-# import ternary as tn
+import calc_ternary_phases as tn
 
 PP_PATH = os.environ["PP"]
 
 
 Ha2eV = 27.211
 
-USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
-#USER_API_KEY = "iItEHUSQ6meb9nks"
+#USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
+USER_API_KEY = "iItEHUSQ6meb9nks"
 base = {"W":"mp-91","Si":"mp-149","C":"mp-569304"}
 
 params = {"ecut" : int(60*Ha2eV),
@@ -63,6 +63,12 @@ def makeRunDirs(structure):
     os.system("mv saturn.sbatch simulations/{}".format(name))
 
 
+# pandas df data structures
+# W Si C
+data = {"structure" : [],
+        "atom quantities" : []}
+
+
 def generateInputs(structures):
     for structure in structures:
 
@@ -81,6 +87,15 @@ def generateInputs(structures):
         writeFiles(structure)
         makeRunDirs(structure)
 
+        # make dataframe as structure files are being populated
+        data["structure"].append(structure.composition.reduced_formula)
+        comp = structure.composition.get_el_amt_dict()
+        data["atom quantities"].append([comp["W"],comp["Si"],comp["C"]])
+
+                
+
 if __name__ == "__main__":
     generateInputs(bc.getBaseElements())
-    # generateInputs(tn.getTernaryStructures())
+    generateInputs(tn.getTernaryStructures(filename="filenames1.txt"))
+    df = pd.DataFrame(data)
+    print(df)

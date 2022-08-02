@@ -28,7 +28,8 @@ def calc_gse(structures):
         #Abinit(v8_legacy_format=True, atoms=ase_structure, label=label, param=params).write_input
         #calc.write_input(atoms=calc.get_atoms , properties=Abinit.implemented_properties)
         ase_structure.calc = calc
-        e = ase_structure.get_potential_energy()
+        ase_structure.write_input()
+        #e = ase_structure.get_potential_energy()
 
 if __name__=="__main__":
     base = bc.getBaseElements()

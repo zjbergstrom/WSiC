@@ -26,10 +26,10 @@ These are repeating structures
 '''
 # Looping over MAX phase compounts 
 
-def getTernaryStructures():
+def getTernaryStructures(filename):
     #read the data
     #os.system("ls ternary_reference_compounds_structures > filenames.txt")
-    instr=open('filenames2.txt','r')
+    instr=open(filename,'r')
     POSCARs=instr.readlines()
 
     base = [Element("W"),Element("Si"),Element("C")]
@@ -50,4 +50,4 @@ def getTernaryStructures():
 
 
 if __name__ == "__main__":
-    structures = getTernaryStructures()
+    structures = getTernaryStructures(filename="filenames1.txt")
