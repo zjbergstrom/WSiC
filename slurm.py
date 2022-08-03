@@ -26,8 +26,7 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
 
 
         fout.write('CURDIR=${PWD}\n')
-        fout.write('OUTDIR=${CURDIR}/simulations/')
-        fout.write('{}\n'.format(job_name))
+        fout.write('OUTDIR=${CURDIR}\n')
         fout.write('#RUNDIR=/cscratch/${USER}/${SLURM_JOBID}\n')
         fout.write('#mkdir -p ${RUNDIR}\n')
         fout.write('#mkdir ${RUNDIR}/results\n\n')
@@ -46,9 +45,8 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
         fout.write('mkdir results\n')
         fout.write('srun --mpi=pmi2 -n 16 abinit < ./input/{}.files\n\n'.format(job_name))
 
-        fout.write('cp -a ${RUNDIR}/results ${OUTDIR}/\n')
-        fout.write('cp -a ${RUNDIR}/log ${OUTDIR}/\n')
-        fout.write('rm -rf ${RUNDIR}\n')
+        fout.write('#cp -a ${RUNDIR}/results ${OUTDIR}/\n')
+        fout.write('#rm -rf ${RUNDIR}\n')
 
 if __name__ == "__main__":
     writeSubmitScript()

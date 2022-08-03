@@ -5,26 +5,20 @@ import os
 import ase
 from pymatgen.core import Lattice, Structure, Molecule, IStructure
 from pymatgen.core.periodic_table import Element
-#from pymatgen.ext.matproj import MPRester
-#from mp_api import MPRester
 import pandas as pd
 
-from ase.io.abinit import * #write_abinit_in, read_abinit_out, read_results
+from ase.io.abinit import *
 import ase.io.abinit as aseio
 from pymatgen.io.ase import AseAtomsAdaptor
 
-#import base_compounds as bc
 import slurm as sl
-#import calc_ternary_phases as tn
 
 PP_PATH = os.environ["PP"]
-
 
 Ha2eV = 27.211
 
 #USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
-USER_API_KEY = "iItEHUSQ6meb9nks"
-base = {"W":"mp-91","Si":"mp-149","C":"mp-569304"}
+#USER_API_KEY = "iItEHUSQ6meb9nks"
 
 params = {"ecut" : int(60*Ha2eV),
             "toldfe" : 1e-6,
