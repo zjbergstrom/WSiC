@@ -1,0 +1,3 @@
+POSCAR._base_mpid=mp-91_formula=W1
+POSCAR._base_mpid=mp-149_formula=Si2
+POSCAR._base_mpid=mp-569304_formula=C4

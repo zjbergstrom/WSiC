@@ -5,7 +5,7 @@ import os
 import ase
 from pymatgen.core import Lattice, Structure, Molecule, IStructure
 from pymatgen.core.periodic_table import Element
-from pymatgen.ext.matproj import MPRester
+#from pymatgen.ext.matproj import MPRester
 #from mp_api import MPRester
 import pandas as pd
 
@@ -13,9 +13,9 @@ from ase.io.abinit import * #write_abinit_in, read_abinit_out, read_results
 import ase.io.abinit as aseio
 from pymatgen.io.ase import AseAtomsAdaptor
 
-import base_compounds as bc
+#import base_compounds as bc
 import slurm as sl
-import calc_ternary_phases as tn
+#import calc_ternary_phases as tn
 
 PP_PATH = os.environ["PP"]
 
@@ -64,6 +64,21 @@ def makeRunDirs(structure):
     os.system("mv {}.in simulations/{}/input".format(name,name))
     os.system("mv saturn.sbatch simulations/{}".format(name))
 
+def getStructures(filename,dir):
+    #read the data
+    instr=open(filename,'r')
+    POSCARs=instr.readlines()
+
+    structures = []
+    for poscar in POSCARs:
+        print("Loading ",poscar.strip())
+        structure = Structure.from_file(dir + poscar.strip())
+        print(structure.composition.formula)
+        print(structure.get_space_group_info())
+        structures.append(structure)
+
+    return structures
+
 
 # pandas df data structures
 # W Si C
@@ -102,8 +117,9 @@ def generateInputs(structures):
                 
 
 if __name__ == "__main__":
-    generateInputs(bc.getBaseElements())
-    generateInputs(tn.getTernaryStructures(filename="filenames1.txt",dir="structurefiles/"))
+    generateInputs(getStructures(filename="filenames0.txt",dir="structurefiles/"))
+    generateInputs(getStructures(filename="filenames1.txt",dir="structurefiles/"))
+    generateInputs(getStructures(filename="filenames2.txt",dir="ternary_reference_compounds/"))
     df = pd.DataFrame(data)
     print(df)
     df.to_pickle('structure_data.pkl')

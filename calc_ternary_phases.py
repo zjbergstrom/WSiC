@@ -9,7 +9,7 @@ import os
 
 import calc_gse
 
-USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
+#USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
 
 # take in reference structures
 # permutate through W, Si, C

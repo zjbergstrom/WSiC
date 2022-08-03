@@ -12,7 +12,6 @@ POSCAR._base_mpid=mp-13136_formula=Si1 W1
 POSCAR._base_mpid=mp-13136_formula=W1 C1
 POSCAR._base_mpid=mp-149_formula=C2
 POSCAR._base_mpid=mp-149_formula=Si1 C1
-POSCAR._base_mpid=mp-149_formula=Si2
 POSCAR._base_mpid=mp-1620_formula=Si1 W1 C1
 POSCAR._base_mpid=mp-1620_formula=Si2 W1
 POSCAR._base_mpid=mp-1620_formula=W1 C2
@@ -34,7 +33,6 @@ POSCAR._base_mpid=mp-33065_formula=W4 C2
 POSCAR._base_mpid=mp-567397_formula=Si1 W6 C2
 POSCAR._base_mpid=mp-567397_formula=Si2 W6 C1
 POSCAR._base_mpid=mp-567397_formula=W6 C3
-POSCAR._base_mpid=mp-569304_formula=C4
 POSCAR._base_mpid=mp-569304_formula=Si1 C3
 POSCAR._base_mpid=mp-569304_formula=Si2 C2
 POSCAR._base_mpid=mp-569304_formula=Si3 C1
@@ -52,7 +50,6 @@ POSCAR._base_mpid=mp-8939_formula=Si3 W3 C3
 POSCAR._base_mpid=mp-8939_formula=Si4 W3 C2
 POSCAR._base_mpid=mp-8939_formula=Si5 W3 C1
 POSCAR._base_mpid=mp-8939_formula=Si6 W3
-POSCAR._base_mpid=mp-91_formula=W1
 POSCAR._base_mpid=mp-972748_formula=Si1 W2 C5
 POSCAR._base_mpid=mp-972748_formula=Si2 W2 C4
 POSCAR._base_mpid=mp-972748_formula=Si3 W2 C3
