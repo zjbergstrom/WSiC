@@ -89,7 +89,7 @@ def generateInputs(structures):
         with open(name + ".in","w") as fd:
             write_abinit_in(fd, ase_structure, param=params)
 
-        sl.writeSubmitScript(name=name)
+        sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name)
         writeFiles(structure)
         makeRunDirs(structure)
 
@@ -106,3 +106,4 @@ if __name__ == "__main__":
     generateInputs(tn.getTernaryStructures(filename="filenames1.txt",dir="structurefiles/"))
     df = pd.DataFrame(data)
     print(df)
+    df.to_pickle('structure_data.pkl')
