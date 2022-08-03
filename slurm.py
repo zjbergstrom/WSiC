@@ -1,3 +1,6 @@
+import os
+pwd = os.environ["PWD"]
+
 
 def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", queue=None, nodes=None, cpus=None, time=None):
     with open(script_name,"w") as fout:
@@ -25,14 +28,13 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
             fout.write('#SBATCH --export=ALL\n')
 
 
-        fout.write('CURDIR=${PWD}\n')
-        fout.write('OUTDIR=${CURDIR}\n')
-        fout.write('#RUNDIR=/cscratch/${USER}/${SLURM_JOBID}\n')
-        fout.write('#mkdir -p ${RUNDIR}\n')
-        fout.write('#mkdir ${RUNDIR}/results\n\n')
+        fout.write('OUTDIR={}/simulations/{}\n'.format(pwd,job_name))
+        fout.write('RUNDIR=/cscratch/${USER}/${SLURM_JOBID}\n')
+        fout.write('mkdir -p ${RUNDIR}\n')
+        fout.write('mkdir ${RUNDIR}/results\n\n')
 
-        fout.write('#cp -a ${CURDIR}/input ${RUNDIR}/\n')
-        fout.write('#cd ${RUNDIR}\n\n')
+        fout.write('cp -a ${OUTDIR}/input ${RUNDIR}/\n')
+        fout.write('cd ${RUNDIR}\n\n')
 
         fout.write('# #Required modules\n')
         fout.write('module load abinit\n')
@@ -42,11 +44,11 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
         fout.write('#module load fftw/3.3.6-mpich3.2-gcc4.7.2\n')
         fout.write('#module load netcdf/4.4.1-mpich3.2-gcc4.7.2\n\n')
 
-        fout.write('mkdir results\n')
-        fout.write('srun --mpi=pmi2 -n 16 abinit < ./input/{}.files\n\n'.format(job_name))
+        #fout.write('mkdir results\n')
+        fout.write('srun --mpi=pmi2 -n 16 abinit < ./input/{}.files > ./results/log\n\n'.format(job_name))
 
-        fout.write('#cp -a ${RUNDIR}/results ${OUTDIR}/\n')
-        fout.write('#rm -rf ${RUNDIR}\n')
+        fout.write('cp -a ${RUNDIR}/results ${OUTDIR}/\n')
+        fout.write('rm -rf ${RUNDIR}\n')
 
 if __name__ == "__main__":
     writeSubmitScript()
