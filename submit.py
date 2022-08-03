@@ -8,5 +8,5 @@ submissions=instr.readlines()
 
 structures = []
 for submission in submissions:
-	os.system("cd {}/simulations/{} | sbatch saturn.sbatch".format(submission))
+	os.system("sbatch {}/simulations/{}/saturn.sbatch".format(pwd,submission))
 
