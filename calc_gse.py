@@ -8,6 +8,8 @@ import ase
 from pymatgen.io.ase import AseAtomsAdaptor
 from ase.calculators.abinit import Abinit
 from sympy import asec
+
+import generate_files as gf
 #import base_compounds as bc
 
 '''
@@ -30,4 +32,4 @@ def calc_gse(structures):
 
 if __name__=="__main__":
     #base = bc.getBaseElements()
-    calc_gse(getStructures(filename="filenames0.txt",dir="structurefiles/"))
+    calc_gse(gf.getStructures(filename="filenames0.txt",dir="structurefiles/"))
