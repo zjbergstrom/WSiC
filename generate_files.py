@@ -44,7 +44,7 @@ def writeFiles(structure):
         fout.write('./results/{}-x\n'.format(name))
         for e in ["C","Si","W"]:
             for element in structure.composition.elements:
-                if e==element:
+                if e==element.symbol:
                     if element.symbol == "C":
                         fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
                     else:
