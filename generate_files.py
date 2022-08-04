@@ -42,11 +42,13 @@ def writeFiles(structure):
         fout.write('./results/{}-i\n'.format(name))
         fout.write('./results/{}-o\n'.format(name))
         fout.write('./results/{}-x\n'.format(name))
-        for element in structure.composition.elements:
-            if element.symbol == "C":
-                fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
-            else:
-                fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+        for e in ["C","Si","W"]:
+            for element in structure.composition.elements:
+                if e==element:
+                    if element.symbol == "C":
+                        fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+                    else:
+                        fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
 
 
 def makeRunDirs(structure):
