@@ -2,7 +2,7 @@ import os
 pwd = os.environ["PWD"]
 
 
-def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", queue=None, nodes=None, cpus=None, time=None):
+def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", queue=None, nodes=None, cpus=None, time=None, rundir="simulations"):
     with open(script_name,"w") as fout:
         if cluster=="saturn":
             fout.write('#!/bin/bash \n\n')
@@ -28,7 +28,7 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
             fout.write('#SBATCH --export=ALL\n')
 
 
-        fout.write('OUTDIR={}/simulations/{}\n'.format(pwd,job_name))
+        fout.write('OUTDIR={}/{}/{}\n'.format(pwd,rundir,job_name))
         fout.write('RUNDIR=/cscratch/${USER}/${SLURM_JOBID}\n')
         fout.write('mkdir -p ${RUNDIR}\n')
         fout.write('mkdir ${RUNDIR}/results\n\n')

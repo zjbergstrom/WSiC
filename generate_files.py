@@ -17,6 +17,8 @@ PP_PATH = os.environ["PP"]
 
 Ha2eV = 27.211
 
+rundir = "simulations"
+print("Putting files into {}".format(rundir))
 
 params = {"ecut" : int(60*Ha2eV),
             "toldfe" : 1e-6,
@@ -53,7 +55,7 @@ def writeFiles(structure,PP):
                         fout.write('{}/pbe_s_sr/{}.psp8\n'.format(PP_PATH,element.symbol))
 
 
-def makeRunDirs(structure,rundir):
+def makeRunDirs(structure):
     name = structure.composition.formula.replace(" ","")
     os.system("mkdir {}/{}".format(rundir,name))
     os.system("mkdir {}/{}/input".format(rundir,name))
@@ -89,7 +91,6 @@ data = {"structure" : [],
         }
 
 def generateInputs(structures):
-    rundir = "simulations"
     os.system("mkdir {}".format(rundir))
     for structure in structures:
 
@@ -105,9 +106,9 @@ def generateInputs(structures):
         with open(name + ".in","w") as fd:
             write_abinit_in(fd, ase_structure, param=params)
 
-        sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name)
+        sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, rundir=rundir)
         writeFiles(structure,"LDA_FHI")
-        makeRunDirs(structure,rundir)
+        makeRunDirs(structure)
 
         # make dataframe as structure files are being populated
         data["structure"].append(name)
