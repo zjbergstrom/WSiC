@@ -122,7 +122,7 @@ def generateInputs(structures):
 
 if __name__ == "__main__":
     generateInputs(getStructures(filename="filenames0.txt",dir="structurefiles/"))
-    generateInputs(getStructures(filename="filenames1.txt",dir="structurefiles/"))
+    # generateInputs(getStructures(filename="filenames1.txt",dir="structurefiles/"))
     # generateInputs(getStructures(filename="filenames2.txt",dir="ternary_reference_compounds_structures/"))
     df = pd.DataFrame(data)
     print(df)

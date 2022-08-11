@@ -1,12 +1,14 @@
 import os
 
 pwd = os.environ["PWD"]
-os.system("ls simulations > submit_dirs.txt")
+rundir = "simulations"
+
+os.system("ls {} > submit_dirs.txt".format(rundir))
 
 instr=open("submit_dirs.txt",'r')
 submissions=instr.readlines()
 
 structures = []
 for submission in submissions:
-	os.system("sbatch simulations/{}/saturn.sbatch".format(submission.strip()))
+	os.system("sbatch {}/{}/saturn.sbatch".format(rundir,submission.strip()))
 

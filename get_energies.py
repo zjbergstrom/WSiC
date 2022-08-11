@@ -7,12 +7,14 @@ pwd = os.environ["PWD"]
 instr=open("submit_dirs.txt",'r')
 structures=instr.readlines()
 
+rundir = "simulations"
+
 # Collect energies
 e = []
 for structure in structures:
     print(structure.strip())
     structure = structure.strip()
-    os.system("grep etotal {}/simulations/{}/results/log > {}.tmp".format(pwd,structure,structure))
+    os.system("grep etotal {}/{}/{}/results/log > {}.tmp".format(pwd,rundir,structure,structure))
     z = genfromtxt("{}.tmp".format(structure))
     if len(z) == 0:
         e.append(0)
