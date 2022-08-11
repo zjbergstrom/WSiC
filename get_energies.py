@@ -37,7 +37,7 @@ else:
     with open("structure_energies.dat","w") as fout:
         for i,structure in enumerate(structures):
             if i==0:
-                fout.write("structure energy")
+                fout.write("structure energy\n")
             fout.write("{} {}\n".format(structure.strip(),e[i]))
 
 # # Write structures and energies into a file
