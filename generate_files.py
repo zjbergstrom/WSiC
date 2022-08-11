@@ -26,7 +26,7 @@ params = {"ecut" : int(60*Ha2eV),
            "optcell" : 1,
            "ionmov" : 2,
            "ntime" : 10,
-        #    "dilatmx" : 1.05,
+           "dilatmx" : 1.05,
            "ecutsm" : 0.5
 }
 
@@ -48,6 +48,9 @@ def writeFiles(structure,PP):
                             fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
                         else:
                             fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+                elif PP == "psp8":
+                    if e==element.symbol:
+                        fout.write('{}/pbe_s_sr/{}.psp8\n'.format(PP_PATH,element.symbol))
 
 
 def makeRunDirs(structure):
