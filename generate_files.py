@@ -31,7 +31,7 @@ params = {"ecut" : int(60*Ha2eV),
 }
 
 
-def writeFiles(structure):
+def writeFiles(structure,PP):
     # Write *.files
     name = structure.composition.formula.replace(" ","")
     with open(name + ".files","w") as fout:
@@ -42,11 +42,12 @@ def writeFiles(structure):
         fout.write('./results/{}-x\n'.format(name))
         for e in ["C","Si","W"]:
             for element in structure.composition.elements:
-                if e==element.symbol:
-                    if element.symbol == "C":
-                        fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
-                    else:
-                        fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+                if PP == "LDA_FHI":
+                    if e==element.symbol:
+                        if element.symbol == "C":
+                            fout.write('{}/LDA_FHI/0{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
+                        else:
+                            fout.write('{}/LDA_FHI/{}-{}.LDA.fhi\n'.format(PP_PATH,element.Z,element.symbol))
 
 
 def makeRunDirs(structure):
@@ -101,7 +102,7 @@ def generateInputs(structures):
             write_abinit_in(fd, ase_structure, param=params)
 
         sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name)
-        writeFiles(structure)
+        writeFiles(structure,"LDA_FHI")
         makeRunDirs(structure)
 
         # make dataframe as structure files are being populated
