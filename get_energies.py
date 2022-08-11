@@ -20,10 +20,30 @@ for structure in structures:
         # print(z,z[0],z[1])
         e.append(z[1])
 
-# Write structures and energies into a file
-with open("structure_energies.dat","w") as fout:
-    for i,structure in enumerate(structures):
-        fout.write("{} {}\n".format(structure.strip(),e[i]))
+# try to open the file, it True, append, if False, write
+filename = "structure_energies.dat"
+try:
+    print("Trying to open the file...")
+    instr = open(filename,"r")
+except:
+    # Write structures and energies into a file
+    print("File not found. Writing {}".format(filename))
+    with open(filename,"w") as fout:
+        for i,structure in enumerate(structures):
+            fout.write("{} {}\n".format(structure.strip(),e[i]))
+else:
+    # Append structures and energies into a file
+    print("File found! Appending...")
+    with open("structure_energies.dat","w") as fout:
+        for i,structure in enumerate(structures):
+            if i==0:
+                fout.write("structure energy")
+            fout.write("{} {}\n".format(structure.strip(),e[i]))
+
+# # Write structures and energies into a file
+# with open("structure_energies.dat","w") as fout:
+#     for i,structure in enumerate(structures):
+#         fout.write("{} {}\n".format(structure.strip(),e[i]))
 
 # Clean up
 os.system("rm *.tmp")

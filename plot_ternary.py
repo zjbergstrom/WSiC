@@ -28,7 +28,7 @@ def _en_to_enth(energy, concs, A, B, C):
        The enthalpy of formation.
     """
 
-    enth = abs(energy - concs[0]*A - concs[1] * B - concs[2] * C)
+    enth = energy - concs[0]*A - concs[1] * B - concs[2] * C
     return enth
 
 
@@ -45,10 +45,10 @@ def _energy_to_enthalpy(energy):
     -------
     enthalpy : list of lists containing the enthalpies.
     """
-    
-    pureA = energy[0][0]
-    pureB = energy[1][0]
-    pureC = energy[2][0]
+
+    pureA = energy[0][0] / energy[0][1][0]
+    pureB = energy[1][0] / energy[1][1][1]
+    pureC = energy[2][0] / energy[2][1][2]
 
     enthalpy = []
     for en in energy:
@@ -106,14 +106,7 @@ def _read_data(fname):
 
             conc_f = []
             for c in conc:
-                if '[' in c and ']' in c:
-                    conc_f.append(int(c[1:-1]))
-                elif '[' in c:
-                    conc_f.append(int(c[1:-1]))
-                elif ']' in c or ',' in c:
-                    conc_f.append(int(c[:-1]))
-                else:
-                    conc_f.append(int(c))
+                conc_f.append(int(float(c)))
             energy.append([VASP, conc_f])
     return energy
 
@@ -134,20 +127,21 @@ def conc_plot(fname):
     points = []
     colors = []
     for en in this_conc:
-        concs = en[0]
-        points.append((concs[0] * 100, concs[1] * 100, concs[2] * 100))
-        colors.append(en[1])
-    
+        if en[1] < 0:
+            concs = en[0]
+            points.append((concs[0] * 100, concs[1] * 100, concs[2] * 100))
+            colors.append(en[1])
+
     scale = 100
     figure, tax = ternary.figure(scale=scale)
     tax.boundary(linewidth=1.0)
     tax.set_title("Enthalpies", fontsize=20)
     tax.gridlines(multiple=10, color="blue")
-    tax.scatter(points, vmax=max(colors), colormap=plt.cm.magma, colorbar=True, c=colors, cmap=plt.cm.magma)
+    tax.scatter(points, vmax=max(colors), vmin=min(colors)  , colormap=plt.cm.magma, colorbar=True, c=colors, cmap=plt.cm.magma)
 
     tax.show()
 
 
 if __name__ == "__main__":
-    conc_plot('scatter_colorbar.txt')
+    conc_plot('plot_data.txt')
 

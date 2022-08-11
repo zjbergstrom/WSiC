@@ -17,19 +17,17 @@ PP_PATH = os.environ["PP"]
 
 Ha2eV = 27.211
 
-#USER_API_KEY = "N0fphWZIy7x6VtkvAEmshsCSdtEBZoQF"
-#USER_API_KEY = "iItEHUSQ6meb9nks"
 
 params = {"ecut" : int(60*Ha2eV),
             "toldfe" : 1e-6,
             "nstep" : 40,
             "kpts" : 1,
             "chksymbreak" : 0,
-#            "optcell" : 1,
-#            "ionmov" : 2,
-#            "ntime" : 10,
-#            "dilatmx" : 1.05,
-#            "ecutsm" : 0.5
+           "optcell" : 1,
+           "ionmov" : 2,
+           "ntime" : 10,
+        #    "dilatmx" : 1.05,
+           "ecutsm" : 0.5
 }
 
 
@@ -80,9 +78,11 @@ def getStructures(filename,dir):
 # W Si C
 data = {"structure" : [],
         "space group" : [],
-        "atom quantities" : [],
+        "W" : [],
+        "Si" : [],
+        "C" : [],
+        # "atom quantities" : [],
         }
-
 
 def generateInputs(structures):
     os.system("mkdir simulations")
@@ -108,14 +108,17 @@ def generateInputs(structures):
         data["structure"].append(name)
         data["space group"].append(structure.get_space_group_info())
         comp = structure.composition.get_el_amt_dict()
-        data["atom quantities"].append([comp["W"],comp["Si"],comp["C"]])
+        # data["atom quantities"].append([comp["W"],comp["Si"],comp["C"]])
+        data["W"].append(comp["W"])
+        data["Si"].append(comp["Si"])
+        data["C"].append(comp["C"])
 
                 
 
 if __name__ == "__main__":
     generateInputs(getStructures(filename="filenames0.txt",dir="structurefiles/"))
     generateInputs(getStructures(filename="filenames1.txt",dir="structurefiles/"))
-    generateInputs(getStructures(filename="filenames2.txt",dir="ternary_reference_compounds_structures/"))
+    # generateInputs(getStructures(filename="filenames2.txt",dir="ternary_reference_compounds_structures/"))
     df = pd.DataFrame(data)
     print(df)
     df.to_pickle('structure_data.pkl')
