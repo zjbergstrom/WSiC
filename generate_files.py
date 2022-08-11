@@ -53,14 +53,14 @@ def writeFiles(structure,PP):
                         fout.write('{}/pbe_s_sr/{}.psp8\n'.format(PP_PATH,element.symbol))
 
 
-def makeRunDirs(structure):
+def makeRunDirs(structure,rundir):
     name = structure.composition.formula.replace(" ","")
-    os.system("mkdir simulations/{}".format(name))
-    os.system("mkdir simulations/{}/input".format(name))
-    os.system("mkdir simulations/{}/results".format(name))
-    os.system("mv {}.files simulations/{}/input".format(name,name))
-    os.system("mv {}.in simulations/{}/input".format(name,name))
-    os.system("mv saturn.sbatch simulations/{}".format(name))
+    os.system("mkdir {}/{}".format(rundir,name))
+    os.system("mkdir {}/{}/input".format(rundir,name))
+    os.system("mkdir {}/{}/results".format(rundir,name))
+    os.system("mv {}.files {}/{}/input".format(name,rundir,name))
+    os.system("mv {}.in {}/{}/input".format(name,rundir,name))
+    os.system("mv saturn.sbatch {}/{}".format(rundir,name))
 
 def getStructures(filename,dir):
     #read the data
@@ -89,7 +89,8 @@ data = {"structure" : [],
         }
 
 def generateInputs(structures):
-    os.system("mkdir simulations")
+    rundir = "simulations"
+    os.system("mkdir {}".format(rundir))
     for structure in structures:
 
         # Information on structure
@@ -106,7 +107,7 @@ def generateInputs(structures):
 
         sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name)
         writeFiles(structure,"LDA_FHI")
-        makeRunDirs(structure)
+        makeRunDirs(structure,rundir)
 
         # make dataframe as structure files are being populated
         data["structure"].append(name)
