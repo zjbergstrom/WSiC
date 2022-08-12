@@ -1,5 +1,7 @@
 import os
 import generate_files as gf
+import numpy as np
+from numpy import genfromtxt
 pwd = os.environ["PWD"]
 
 
@@ -52,8 +54,12 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
         fout.write('rm -rf ${RUNDIR}\n')
 
 if __name__ == "__main__":
-    structs = gf.getStructures(filename="DNF.txt",dir="structurefiles/")
+    structs = gf.getStructures(filename="filenames0.txt",dir="structurefiles/")
+    DNF = genfromtxt("DNF.txt")
+    rundir = "simulations"
     for struct in structs:
-        gf.mvFiles(struct)
-        writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", \
-            nodes=2, hrs=0, mins=30, rundir="simulations")
+        if struct in DNF:
+            name = struct.composition.formula.replace(" ","")
+            writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, \
+                                rundir=rundir, nodes=None, cpus=None, hrs=0, mins=30)
+            os.system("mv saturn.sbatch {}/{}".format(rundir,name))
