@@ -2,7 +2,6 @@
 import ternary
 import matplotlib.pyplot as plt
 
-
 def _en_to_enth(energy, concs, A, B, C):
     """Converts an energy to an enthalpy.
     Converts energy to enthalpy using the following formula:
@@ -126,18 +125,23 @@ def conc_plot(fname):
 
     points = []
     colors = []
+    sizes = []
     for en in this_conc:
         if en[1] < 0:
             concs = en[0]
             points.append((concs[0] * 100, concs[1] * 100, concs[2] * 100))
             colors.append(en[1])
+            sizes.append(abs(en[1]))
+
+    print("sizes")
+    print(sizes)
 
     scale = 100
     figure, tax = ternary.figure(scale=scale)
     tax.boundary(linewidth=1.0)
     tax.set_title("Enthalpies", fontsize=20)
     tax.gridlines(multiple=10, color="blue")
-    tax.scatter(points, vmax=max(colors), vmin=min(colors)  , colormap=plt.cm.magma, colorbar=True, c=colors, cmap=plt.cm.magma)
+    tax.scatter(points, vmax=max(colors), vmin=min(colors), colormap=plt.cm.magma, colorbar=True, c=colors, s=sizes, cmap=plt.cm.magma)
 
     tax.show()
 

@@ -106,7 +106,8 @@ def generateInputs(structures):
         with open(name + ".in","w") as fd:
             write_abinit_in(fd, ase_structure, param=params)
 
-        sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, rundir=rundir)
+        sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, \
+                                rundir=rundir, nodes=None, cpus=None, hrs=0, mins=30)
         writeFiles(structure,"LDA_FHI")
         makeRunDirs(structure)
 
@@ -125,6 +126,9 @@ if __name__ == "__main__":
     generateInputs(getStructures(filename="filenames0.txt",dir="structurefiles/"))
     # generateInputs(getStructures(filename="filenames1.txt",dir="structurefiles/"))
     # generateInputs(getStructures(filename="filenames2.txt",dir="ternary_reference_compounds_structures/"))
+
+    # generateInputs(getStructures(filename="DNF.txt",dir="structurefiles/"))
+
     df = pd.DataFrame(data)
     print(df)
     df.to_pickle('structure_data.pkl')

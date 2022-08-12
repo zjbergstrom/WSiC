@@ -14,16 +14,22 @@ e = []
 for structure in structures:
     print(structure.strip())
     structure = structure.strip()
-    os.system("grep etotal {}/{}/{}/results/log > {}.tmp".format(pwd,rundir,structure,structure))
-    z = genfromtxt("{}.tmp".format(structure))
-    if len(z) == 0:
+    os.system("grep 'etotal  ' {}/{}/{}/results/log > {}.tmp".format(pwd,rundir,structure,structure))
+    try:
+        z = genfromtxt("{}.tmp".format(structure))
+        e.append(z[1])
+    except IndexError:
+        print("empty file, skipping structure {}".format(structure))
         e.append(0)
     else:
-        # print(z,z[0],z[1])
+        print("not an empty file!")
+        z = genfromtxt("{}.tmp".format(structure))
         e.append(z[1])
+        
 
 # try to open the file, it True, append, if False, write
 filename = "structure_energies.dat"
+DNF = []
 try:
     print("Trying to open the file...")
     instr = open(filename,"r")
@@ -36,16 +42,17 @@ except:
 else:
     # Append structures and energies into a file
     print("File found! Appending...")
-    with open("structure_energies.dat","w") as fout:
+    with open("structure_energies.dat","a") as fout:
         for i,structure in enumerate(structures):
             if i==0:
                 fout.write("structure energy\n")
-            fout.write("{} {}\n".format(structure.strip(),e[i]))
-
-# # Write structures and energies into a file
-# with open("structure_energies.dat","w") as fout:
-#     for i,structure in enumerate(structures):
-#         fout.write("{} {}\n".format(structure.strip(),e[i]))
+            if e[i] != 0:
+                fout.write("{} {}\n".format(structure.strip(),e[i]))
+            else:
+                DNF.append(structure.strip())
+#print("DNF:",DNF)
+print(len(DNF),"structures out of",len(structures),"did not finish")
+np.savetxt("DNF.txt",DNF,fmt="%s")
 
 # Clean up
 os.system("rm *.tmp")
