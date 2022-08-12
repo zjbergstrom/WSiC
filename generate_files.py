@@ -60,6 +60,9 @@ def makeRunDirs(structure):
     os.system("mkdir {}/{}".format(rundir,name))
     os.system("mkdir {}/{}/input".format(rundir,name))
     os.system("mkdir {}/{}/results".format(rundir,name))
+
+def mvFiles(structure):
+    name = structure.composition.formula.replace(" ","")
     os.system("mv {}.files {}/{}/input".format(name,rundir,name))
     os.system("mv {}.in {}/{}/input".format(name,rundir,name))
     os.system("mv saturn.sbatch {}/{}".format(rundir,name))
@@ -110,6 +113,7 @@ def generateInputs(structures):
                                 rundir=rundir, nodes=None, cpus=None, hrs=0, mins=30)
         writeFiles(structure,"LDA_FHI")
         makeRunDirs(structure)
+        mvFiles(structure)
 
         # make dataframe as structure files are being populated
         data["structure"].append(name)

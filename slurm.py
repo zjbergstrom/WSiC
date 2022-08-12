@@ -1,4 +1,5 @@
 import os
+import generate_files as gf
 pwd = os.environ["PWD"]
 
 
@@ -51,4 +52,8 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
         fout.write('rm -rf ${RUNDIR}\n')
 
 if __name__ == "__main__":
-    writeSubmitScript()
+    structs = gf.getStructures(filename="DNF.txt",dir="structurefiles/")
+    for struct in structs:
+        gf.mvFiles(struct)
+        writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", \
+            nodes=2, hrs=0, mins=30, rundir="simulations")
