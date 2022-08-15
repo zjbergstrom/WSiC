@@ -115,8 +115,6 @@ def conc_plot(fname):
             colors.append(en[0])
             sizes.append(en[0]*-1)
 
-    # sizes = np.exp(np.array(sizes)+min(sizes)+4)
-
     maxi = max(sizes)
     mini = min(sizes)
     max_size = 40
@@ -127,19 +125,19 @@ def conc_plot(fname):
     for s in sizes:  
         marker_sizes.append((((s - mini) * NewRange) / OldRange) + min_size)
 
-    print("sizes",sizes)
-    print("marker sizes",marker_sizes)
+    # print("sizes",sizes)
+    # print("marker sizes",marker_sizes)
 
     scale = 100
     figure, tax = ternary.figure(scale=scale)
     tax.boundary(linewidth=1.0)
     tax.set_title("Enthalpies", fontsize=20)
     tax.gridlines(multiple=10, color="blue")
-    tax.scatter(points, vmax=max(colors), vmin=min(colors), marker='d', colormap=plt.cm.magma, colorbar=True, c=colors, s=marker_sizes, cmap=plt.cm.magma)
+    tax.scatter(points, vmax=max(colors), vmin=min(colors), marker='d', colormap=plt.cm.viridis, colorbar=True, c=colors, s=marker_sizes)
     tax.bottom_axis_label("W")
     tax.right_axis_label("Si")
     tax.left_axis_label("C")
-
+    tax.get_axes().axis('off')
     tax.show()
 
 
