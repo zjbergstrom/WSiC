@@ -1,6 +1,7 @@
 """An example of the colorbar display on the scatter plot."""
 import ternary
 import matplotlib.pyplot as plt
+import numpy as np
 
 def _en_to_enth(energy, concs, A, B, C):
     """Converts an energy to an enthalpy.
@@ -54,32 +55,11 @@ def _energy_to_enthalpy(energy):
         c = en[1]
         conc = [float(i) / sum(c) for i in c]
 
-        VASP = _en_to_enth(en[0], conc, pureA, pureB, pureC)
+        VASP = _en_to_enth(en[0]/sum(c), conc, pureA, pureB, pureC)
 
-        enthalpy.append([VASP, c])
+        enthalpy.append([VASP, conc])
 
     return enthalpy
-
-
-def _find_concs(vals):
-    """Find the errors in the energy values.
-    This function finds the errors in the enthalpys.
-    Parameters
-    ----------
-    vals : list of lists of floats
-    Returns
-    -------
-    err_vals : list of lists containing the errors.
-    """
-
-    e_vals = []
-    for en in vals:
-        c = en[1]
-        conc = [float(i) / sum(c) for i in c]
-
-        e_vals.append([conc, en[0]])
-
-    return e_vals
 
 
 def _read_data(fname):
@@ -121,27 +101,44 @@ def conc_plot(fname):
 
     energies = _read_data(fname)
     enthalpy = _energy_to_enthalpy(energies)
-    this_conc = _find_concs(enthalpy)
+
+    # print(enthalpy)
 
     points = []
     colors = []
     sizes = []
-    for en in this_conc:
-        if en[1] < 0:
-            concs = en[0]
+    for en in enthalpy:
+        print(en[0])
+        if en[0] < 1 and en[0] > -4:
+            concs = en[1]
             points.append((concs[0] * 100, concs[1] * 100, concs[2] * 100))
-            colors.append(en[1])
-            sizes.append(abs(en[1]))
+            colors.append(en[0])
+            sizes.append(en[0]*-1)
 
-    print("sizes")
-    print(sizes)
+    # sizes = np.exp(np.array(sizes)+min(sizes)+4)
+
+    maxi = max(sizes)
+    mini = min(sizes)
+    max_size = 40
+    min_size = 2
+    OldRange = maxi - mini  
+    NewRange = max_size - min_size # max marker size minus min marker size
+    marker_sizes = []
+    for s in sizes:  
+        marker_sizes.append((((s - mini) * NewRange) / OldRange) + min_size)
+
+    print("sizes",sizes)
+    print("marker sizes",marker_sizes)
 
     scale = 100
     figure, tax = ternary.figure(scale=scale)
     tax.boundary(linewidth=1.0)
     tax.set_title("Enthalpies", fontsize=20)
     tax.gridlines(multiple=10, color="blue")
-    tax.scatter(points, vmax=max(colors), vmin=min(colors), colormap=plt.cm.magma, colorbar=True, c=colors, s=sizes, cmap=plt.cm.magma)
+    tax.scatter(points, vmax=max(colors), vmin=min(colors), marker='d', colormap=plt.cm.magma, colorbar=True, c=colors, s=marker_sizes, cmap=plt.cm.magma)
+    tax.bottom_axis_label("W")
+    tax.right_axis_label("Si")
+    tax.left_axis_label("C")
 
     tax.show()
 
