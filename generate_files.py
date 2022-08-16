@@ -22,14 +22,15 @@ print("Putting files into {}".format(rundir))
 
 params = {"ecut" : int(60*Ha2eV),
             "toldfe" : 1e-6,
-            "nstep" : 40,
+            "nstep" : 10,
             "kpts" : 1,
             "chksymbreak" : 0,
-           "optcell" : 1,
-           "ionmov" : 2,
-           "ntime" : 10,
-           "dilatmx" : 1.05,
-           "ecutsm" : 0.5
+            "optcell" : 1,
+            "ionmov" : 2,
+            "ntime" : 10,
+            "dilatmx" : 1.05,
+            "ecutsm" : 0.5,
+            "getwfk" : -1,
 }
 
 
@@ -110,7 +111,7 @@ def generateInputs(structures):
             write_abinit_in(fd, ase_structure, param=params)
 
         sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, \
-                                rundir=rundir, nodes=None, cpus=None, hrs=0, mins=30)
+                                rundir=rundir, nodes=2, hrs=0, mins=30)
         writeFiles(structure,"LDA_FHI")
         makeRunDirs(structure)
         mvFiles(structure)
