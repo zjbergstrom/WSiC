@@ -54,12 +54,17 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
         fout.write('rm -rf ${RUNDIR}\n')
 
 if __name__ == "__main__":
-    structs = gf.getStructures(filename="filenames0.txt",dir="structurefiles/")
-    DNF = genfromtxt("DNF.txt")
+    structs = gf.getStructures(filename="filenames1.txt",dir="structurefiles/")
+    base_structs = gf.getStructures(filename="filenames0.txt",dir="structurefiles/")
+    structs = structs + base_structs
+    filename = "DNF.txt"
+    instr = open(filename,"r")
+    DNF = instr.read().splitlines()
     rundir = "simulations"
     for struct in structs:
-        if struct in DNF:
-            name = struct.composition.formula.replace(" ","")
+        name = struct.composition.formula.replace(" ","")
+        if name in DNF:
+            print("Found",name,"in {}.".format(filename))
             writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, \
-                                rundir=rundir, nodes=None, cpus=None, hrs=0, mins=30)
+                                rundir=rundir, nodes=4, hrs=1, mins=00)
             os.system("mv saturn.sbatch {}/{}".format(rundir,name))
