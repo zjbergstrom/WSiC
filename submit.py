@@ -5,11 +5,14 @@ rundir = "simulations"
 
 os.system("ls {} > submit_dirs.txt".format(rundir))
 
-instr=open("submit_dirs.txt",'r')
+filename = "submit_dirs.txt"
+instr=open(filename,'r')
 # instr = open("DNF.txt")
 submissions=instr.readlines()
 
 structures = []
 for submission in submissions:
-	os.system("sbatch {}/{}/saturn.sbatch".format(rundir,submission.strip()))
+	os.system("sbatch {}/{}/abinit.sbatch".format(rundir,submission.strip()))
+
+print("submitted",len(structures),"jobs")
 

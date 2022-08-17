@@ -25,7 +25,7 @@ params = {"ecut" : int(60*Ha2eV),
             "nstep" : 10,
             "kpts" : 1,
             "chksymbreak" : 0,
-            "optcell" : 1,
+            "optcell" : 2,
             "ionmov" : 2,
             "ntime" : 10,
             "dilatmx" : 1.05,
@@ -66,7 +66,7 @@ def mvFiles(structure):
     name = structure.composition.formula.replace(" ","")
     os.system("mv {}.files {}/{}/input".format(name,rundir,name))
     os.system("mv {}.in {}/{}/input".format(name,rundir,name))
-    os.system("mv saturn.sbatch {}/{}".format(rundir,name))
+    os.system("mv abinit.sbatch {}/{}".format(rundir,name))
 
 def getStructures(filename,dir):
     #read the data
@@ -75,10 +75,10 @@ def getStructures(filename,dir):
 
     structures = []
     for poscar in POSCARs:
-        print("Loading ",poscar.strip())
+        # print("Loading ",poscar.strip())
         structure = Structure.from_file(dir + poscar.strip())
-        print(structure.composition.formula)
-        print(structure.get_space_group_info())
+        # print(structure.composition.formula)
+        # print(structure.get_space_group_info())
         structures.append(structure)
 
     return structures
@@ -110,7 +110,7 @@ def generateInputs(structures):
         with open(name + ".in","w") as fd:
             write_abinit_in(fd, ase_structure, param=params)
 
-        sl.writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, \
+        sl.writeSubmitScript(cluster="saturn", script_name="abinit.sbatch", job_name=name, \
                                 rundir=rundir, nodes=2, hrs=0, mins=30)
         writeFiles(structure,"LDA_FHI")
         makeRunDirs(structure)

@@ -9,7 +9,7 @@ pwd = os.environ["PWD"]
 cpus = {"saturn" : 8, "iris" : 16}
 q = {"saturn" : "batch", "iris" : "short"}
 
-def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", queue = None, nodes=2, hrs=0, mins=30, rundir="simulations"):
+def writeSubmitScript(cluster="saturn", script_name = "abinit.sbatch", job_name="job name", queue = None, nodes=2, hrs=0, mins=30, rundir="simulations"):
     with open(script_name,"w") as fout:
         fout.write('#!/bin/bash \n\n')
 
@@ -58,6 +58,6 @@ if __name__ == "__main__":
         name = struct.composition.formula.replace(" ","")
         if name in DNF:
             print("Found",name,"in {}.".format(filename))
-            writeSubmitScript(cluster="saturn", script_name="saturn.sbatch", job_name=name, \
+            writeSubmitScript(cluster="saturn", script_name="abinit.sbatch", job_name=name, \
                                 rundir=rundir, nodes=4, hrs=1, mins=00)
-            os.system("mv saturn.sbatch {}/{}".format(rundir,name))
+            os.system("mv abinit.sbatch {}/{}".format(rundir,name))

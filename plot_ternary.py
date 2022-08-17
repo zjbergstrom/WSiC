@@ -108,17 +108,19 @@ def conc_plot(fname):
     colors = []
     sizes = []
     for en in enthalpy:
-        print(en[0])
+        # print(en[0])
         if en[0] < 1 and en[0] > -4:
             concs = en[1]
             points.append((concs[0] * 100, concs[1] * 100, concs[2] * 100))
             colors.append(en[0])
             sizes.append(en[0]*-1)
+        else:
+            print(en[0],en[1])
 
     maxi = max(sizes)
     mini = min(sizes)
     max_size = 40
-    min_size = 2
+    min_size = 20
     OldRange = maxi - mini  
     NewRange = max_size - min_size # max marker size minus min marker size
     marker_sizes = []
