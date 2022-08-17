@@ -93,7 +93,7 @@ def generateInputs(structures):
 
         # Information on structure
         name = structure.composition.formula.replace(" ","")
-        print(name, structure.get_space_group_info())
+        # print(name, structure.get_space_group_info())
 
         # Change structure to ase type
         ase_structure = AseAtomsAdaptor.get_atoms(structure)
