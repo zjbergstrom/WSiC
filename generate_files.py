@@ -93,8 +93,7 @@ def generateInputs(structures):
 
         # Information on structure
         name = structure.composition.formula.replace(" ","")
-        print(name)
-        print(structure.get_space_group_info())
+        print(name, structure.get_space_group_info())
 
         # Change structure to ase type
         ase_structure = AseAtomsAdaptor.get_atoms(structure)
@@ -113,7 +112,6 @@ def generateInputs(structures):
         data["structure"].append(name)
         data["space group"].append(structure.get_space_group_info())
         comp = structure.composition.get_el_amt_dict()
-        # data["atom quantities"].append([comp["W"],comp["Si"],comp["C"]])
         data["W"].append(comp["W"])
         data["Si"].append(comp["Si"])
         data["C"].append(comp["C"])
