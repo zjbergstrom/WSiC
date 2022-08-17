@@ -4,32 +4,25 @@ import numpy as np
 from numpy import genfromtxt
 pwd = os.environ["PWD"]
 
+# Iris: 16 cpus per node
+# Saturn: 8 cpus per node
+cpus = {"saturn" : 8, "iris" : 16}
+q = {"saturn" : "batch", "iris" : "short"}
 
-def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", nodes=2, hrs=0, mins=30, rundir="simulations"):
+def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name="job name", queue = None, nodes=2, hrs=0, mins=30, rundir="simulations"):
     with open(script_name,"w") as fout:
-        if cluster=="saturn":
-            fout.write('#!/bin/bash \n\n')
-            fout.write('#SBATCH -p batch\n')
-            fout.write('#SBATCH -n 8\n')
-            fout.write('#SBATCH -N {}\n'.format(nodes))
-            fout.write('#SBATCH --tasks-per-node=8\n')
-            fout.write('#SBATCH -t 0-{}:{}:00\n'.format(hrs,mins))
-            fout.write('###SBATCH --mem-per-cpu=1000M\n')
-            fout.write('#SBATCH -o log\n')
-            fout.write('#SBATCH --job-name="{}"\n'.format(job_name))
-            fout.write('#SBATCH --export=ALL\n\n')
-        elif cluster=="iris":
-            fout.write('#!/bin/bash\n\n')
-            fout.write('#SBATCH -p short\n')
-            fout.write('#SBATCH -n 1\n')
-            fout.write('#SBATCH -N 1\n')
-            fout.write('#SBATCH --tasks-per-node=8\n')
-            fout.write('#SBATCH -t 0-00:30:00\n')
-            fout.write('###SBATCH --mem-per-cpu=1000M\n')
-            fout.write('#SBATCH -o log\n')
-            fout.write('#SBATCH --job-name="{}"\n'.format(job_name))
-            fout.write('#SBATCH --export=ALL\n')
+        fout.write('#!/bin/bash \n\n')
 
+        if queue is not None: fout.write('#SBATCH -p {}\n'.format(queue))
+        else: fout.write('#SBATCH -p {}\n'.format(q[cluster]))
+        fout.write('#SBATCH -n {}\n'.format(cpus[cluster]))
+        fout.write('#SBATCH -N {}\n'.format(nodes))
+        fout.write('#SBATCH --tasks-per-node={}\n'.format(cpus[cluster]))
+        fout.write('#SBATCH -t 0-{}:{}:00\n'.format(hrs,mins))
+        fout.write('###SBATCH --mem-per-cpu=1000M\n')
+        fout.write('#SBATCH -o log\n')
+        fout.write('#SBATCH --job-name="{}"\n'.format(job_name))
+        fout.write('#SBATCH --export=ALL\n\n')
 
         fout.write('OUTDIR={}/{}/{}\n'.format(pwd,rundir,job_name))
         fout.write('RUNDIR=/cscratch/${USER}/${SLURM_JOBID}\n')
@@ -48,7 +41,7 @@ def writeSubmitScript(cluster="saturn", script_name = "saturn.sbatch", job_name=
         fout.write('#module load netcdf/4.4.1-mpich3.2-gcc4.7.2\n\n')
 
         #fout.write('mkdir results\n')
-        fout.write('srun --mpi=pmi2 -n {} abinit < ./input/{}.files > ./results/log\n\n'.format(nodes*8,job_name))
+        fout.write('srun --mpi=pmi2 -n {} abinit < ./input/{}.files > ./results/log\n\n'.format(nodes*cpus[cluster],job_name))
 
         fout.write('cp -a ${RUNDIR}/results ${OUTDIR}/\n')
         fout.write('rm -rf ${RUNDIR}\n')
