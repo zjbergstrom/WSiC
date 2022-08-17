@@ -30,7 +30,12 @@ for structure in structures:
                 e.append(line[1])
         if NotFound:
             e.append(0)
-        
+        print("\n=============================")
+        print("Simulations details:")
+        print("-----------------------------")
+        os.system("grep etotal {}".format(log_dir))
+        print("-----------------------------")
+        os.system("grep gradients {}".format(log_dir))
 
 
 filename = "structure_energies.dat"
