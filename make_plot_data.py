@@ -25,6 +25,6 @@ np.savetxt('si.txt', df_s["Si"].values)
 np.savetxt('c.txt', df_s["C"].values)
 
 os.system("paste e.txt w.txt si.txt c.txt > plot_data.txt")
-os.system("e.txt w.txt si.txt c.txt")
+os.system("rm e.txt w.txt si.txt c.txt")
 
 

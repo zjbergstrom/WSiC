@@ -12,47 +12,60 @@ rundir = "simulations"
 # Collect energies
 e = []
 for structure in structures:
-    print(structure.strip())
     structure = structure.strip()
-    os.system("grep 'etotal  ' {}/{}/{}/results/log > {}.tmp".format(pwd,rundir,structure,structure))
+    log_dir = "{}/{}/{}/results/log".format(pwd,rundir,structure)
     try:
-        z = genfromtxt("{}.tmp".format(structure))
-        e.append(z[1])
-    except IndexError:
-        print("empty file, skipping structure {}".format(structure))
+        logfile = open(log_dir).readlines()
+    except FileNotFoundError:
+        print("No log file for structure {}! Appending 0 for the energy...".format(structure))
         e.append(0)
     else:
-        print("not an empty file!")
-        z = genfromtxt("{}.tmp".format(structure))
-        e.append(z[1])
+        NotFound = True
+        for line in logfile:
+            line = line.strip()
+            if "etotal  " in line:
+                NotFound = False
+                line = line.split()
+                print(structure,line[1])
+                e.append(line[1])
+        if NotFound:
+            e.append(0)
         
 
-# try to open the file, it True, append, if False, write
+
 filename = "structure_energies.dat"
 DNF = []
+
 try:
     print("Trying to open the file...")
     instr = open(filename,"r")
+
 except:
-    # Write structures and energies into a file
-    print("File not found. Writing {}".format(filename))
     with open(filename,"w") as fout:
-        for i,structure in enumerate(structures):
-            fout.write("{} {}\n".format(structure.strip(),e[i]))
-else:
-    # Append structures and energies into a file
-    print("File found! Appending...")
-    with open("structure_energies.dat","a") as fout:
         for i,structure in enumerate(structures):
             if i==0:
                 fout.write("structure energy\n")
+            # if the calculation completed, record the structure and energy
             if e[i] != 0:
                 fout.write("{} {}\n".format(structure.strip(),e[i]))
+            # if the calculation did not complete, add the structure to DNF list
             else:
                 DNF.append(structure.strip())
+
+else:
+    # Append structures and energies into a file
+    print("Appending energies to existing file...")
+    with open("structure_energies.dat","a") as fout:
+        for i,structure in enumerate(structures):
+            # if the calculation completed, record the structure and energy
+            if e[i] != 0:
+                fout.write("{} {}\n".format(structure.strip(),e[i]))
+            # if the calculation did not complete, add the structure to DNF list
+            else:
+                DNF.append(structure.strip())
+
 #print("DNF:",DNF)
 print(len(DNF),"structures out of",len(structures),"did not finish")
 np.savetxt("DNF.txt",DNF,fmt="%s")
 
-# Clean up
-os.system("rm *.tmp")
+

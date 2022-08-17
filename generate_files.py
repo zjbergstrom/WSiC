@@ -12,13 +12,13 @@ import ase.io.abinit as aseio
 from pymatgen.io.ase import AseAtomsAdaptor
 
 import slurm as sl
+import structure_pathways as sp
 
 PP_PATH = os.environ["PP"]
-
 Ha2eV = 27.211
-
 rundir = "simulations"
-print("Putting files into {}".format(rundir))
+
+print("Putting files into directory: {}".format(rundir))
 
 params = {"ecut" : int(60*Ha2eV),
             "toldfe" : 1e-6,
@@ -28,9 +28,9 @@ params = {"ecut" : int(60*Ha2eV),
             "optcell" : 2,
             "ionmov" : 2,
             "ntime" : 10,
-            "dilatmx" : 1.05,
+            "dilatmx" : 1.1,
             "ecutsm" : 0.5,
-            "getwfk" : -1,
+            # "getwfk" : -1,
 }
 
 
@@ -68,30 +68,23 @@ def mvFiles(structure):
     os.system("mv {}.in {}/{}/input".format(name,rundir,name))
     os.system("mv abinit.sbatch {}/{}".format(rundir,name))
 
-def getStructures(filename,dir):
-    #read the data
-    instr=open(filename,'r')
-    POSCARs=instr.readlines()
-
+def getStructures(struct_paths):
     structures = []
-    for poscar in POSCARs:
-        # print("Loading ",poscar.strip())
-        structure = Structure.from_file(dir + poscar.strip())
-        # print(structure.composition.formula)
-        # print(structure.get_space_group_info())
-        structures.append(structure)
-
+    for POSCARS in struct_paths:
+        for poscar in POSCARS.keys():
+            structure = Structure.from_file(POSCARS[poscar])
+            print(structure.composition.formula.replace(" ",""), structure.get_space_group_info())
+            structures.append(structure)
     return structures
 
 
-# pandas df data structures
-# W Si C
+
+
 data = {"structure" : [],
         "space group" : [],
         "W" : [],
         "Si" : [],
         "C" : [],
-        # "atom quantities" : [],
         }
 
 def generateInputs(structures):
@@ -128,12 +121,9 @@ def generateInputs(structures):
                 
 
 if __name__ == "__main__":
-    generateInputs(getStructures(filename="filenames0.txt",dir="structurefiles/"))
-    # generateInputs(getStructures(filename="filenames1.txt",dir="structurefiles/"))
-    # generateInputs(getStructures(filename="filenames2.txt",dir="ternary_reference_compounds_structures/"))
+    generateInputs(getStructures([sp.base_pathways, sp.all_pathways]))
+    # generateInputs(getStructures(sp.findDict("DNF.txt")))
 
-    # generateInputs(getStructures(filename="DNF.txt",dir="structurefiles/"))
-
-    df = pd.DataFrame(data)
-    print(df)
-    df.to_pickle('structure_data.pkl')
+    # df = pd.DataFrame(data)
+    # print(df)
+    # df.to_pickle('structure_data.pkl')
