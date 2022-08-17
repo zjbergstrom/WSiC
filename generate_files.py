@@ -103,8 +103,8 @@ def generateInputs(structures):
         with open(name + ".in","w") as fd:
             write_abinit_in(fd, ase_structure, param=params)
 
-        sl.writeSubmitScript(cluster="saturn", script_name="abinit.sbatch", job_name=name, \
-                                rundir=rundir, nodes=2, hrs=0, mins=30)
+        sl.writeSubmitScript(cluster="iris", script_name="abinit.sbatch", job_name=name, \
+                                rundir=rundir, nodes=1, hrs=0, mins=30)
         writeFiles(structure,"LDA_FHI")
         makeRunDirs(structure)
         mvFiles(structure)

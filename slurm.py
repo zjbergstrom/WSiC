@@ -9,13 +9,14 @@ pwd = os.environ["PWD"]
 cpus = {"saturn" : 8, "iris" : 16}
 q = {"saturn" : "batch", "iris" : "short"}
 
-def writeSubmitScript(cluster="saturn", script_name = "abinit.sbatch", job_name="job name", queue = None, nodes=2, hrs=0, mins=30, rundir="simulations"):
+def writeSubmitScript(cluster="saturn", script_name="abinit.sbatch", job_name="job name", queue=None, nodes=2, cpu=None, hrs=0, mins=30, rundir="simulations"):
     with open(script_name,"w") as fout:
         fout.write('#!/bin/bash \n\n')
 
         if queue is not None: fout.write('#SBATCH -p {}\n'.format(queue))
         else: fout.write('#SBATCH -p {}\n'.format(q[cluster]))
-        fout.write('#SBATCH -n {}\n'.format(cpus[cluster]))
+        if cpu is not None: fout.write('#SBATCH -n {}\n'.format(cpu))
+        else: fout.write('#SBATCH -n {}\n'.format(cpus[cluster]))
         fout.write('#SBATCH -N {}\n'.format(nodes))
         fout.write('#SBATCH --tasks-per-node={}\n'.format(cpus[cluster]))
         fout.write('#SBATCH -t 0-{}:{}:00\n'.format(hrs,mins))
