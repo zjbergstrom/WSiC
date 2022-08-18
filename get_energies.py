@@ -35,7 +35,7 @@ for structure in structures:
         for line in logfile:
             line = line.strip()
             if "gradients are converged" in line:
-                print("{} structural relaxation did not conclude.")
+                print("{} is converged!.".format(structure))
                 NotConv = False
             if "etotal  " in line and NotConv==False:
                 NotFound = False
